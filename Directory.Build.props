@@ -1,0 +1,24 @@
+<Project>
+	<PropertyGroup>        
+		<VersionPrefix>1.0.0</VersionPrefix>
+		<PackageVersion>1.0.0</PackageVersion>
+		<Authors>Nuno Cancelo</Authors>
+    <PackageIcon>icon.64.png</PackageIcon>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/masterzdran/masterzdran-restapi-extensions</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/masterzdran/masterzdran-restapi-extensions</PackageProjectUrl>
+		<PackageId>MasterZdran.RestApi.Extensions</PackageId>		
+		<RepositoryType>git</RepositoryType>
+		<RepositoryBranch>main</RepositoryBranch>
+    <Title>MasterZdran.RestApi.Extensions</Title>
+    <Description>A library with methods and models to simplify API settings.</Description>
+    <PackageTags>Rest, API</PackageTags>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Include="../../../icon.64.png" Pack="true" PackagePath="\" />
+	</ItemGroup>
+	  <ItemGroup>
+    <None Include="../../../README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+</Project>
