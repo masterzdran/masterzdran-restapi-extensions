@@ -32,7 +32,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 c.AddSwaggerSecurityRequirement(swaggerOptions);
 
                 // Set the comments path for the Swagger JSON and UI.
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlFile = swaggerOptions.XmlFile;
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
@@ -68,7 +68,7 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 throw new ArgumentNullException("Invalid Implicit Flow Configuration.");
             }
-            openApiOAuthFlows.Implicit = swaggerOptions.OpenApiSecurityScheme.Flows.Implicit;
+            openApiOAuthFlows.Implicit = GetOpenAPIUpdatedFlow(swaggerOptions.OpenApiSecurityScheme.Flows.Implicit);
 
         }
         public static void AddPasswordFlow(this OpenApiOAuthFlows openApiOAuthFlows, SwaggerExtensionsOptions swaggerOptions)
@@ -79,7 +79,7 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 throw new ArgumentNullException("Invalid Password Flow Configuration.");
             }
-            openApiOAuthFlows.Password = swaggerOptions.OpenApiSecurityScheme.Flows.Password;
+            openApiOAuthFlows.Password = GetOpenAPIUpdatedFlow(swaggerOptions.OpenApiSecurityScheme.Flows.Password);
         }
         public static void AddClientCredentialsFlow(this OpenApiOAuthFlows openApiOAuthFlows, SwaggerExtensionsOptions swaggerOptions)
         {
@@ -89,7 +89,7 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 throw new ArgumentNullException("Invalid ClientCredentials Flow Configuration.");
             }
-            openApiOAuthFlows.ClientCredentials = swaggerOptions.OpenApiSecurityScheme.Flows.ClientCredentials;
+            openApiOAuthFlows.ClientCredentials = GetOpenAPIUpdatedFlow(swaggerOptions.OpenApiSecurityScheme.Flows.ClientCredentials);
         }
         public static void AddAuthorizationCodeFlow(this OpenApiOAuthFlows openApiOAuthFlows, SwaggerExtensionsOptions swaggerOptions)
         {
@@ -99,7 +99,7 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 throw new ArgumentNullException("Invalid AuthorizationCode Flow Configuration.");
             }
-            openApiOAuthFlows.AuthorizationCode = swaggerOptions.OpenApiSecurityScheme.Flows.AuthorizationCode;
+            openApiOAuthFlows.AuthorizationCode = GetOpenAPIUpdatedFlow(swaggerOptions.OpenApiSecurityScheme.Flows.AuthorizationCode);
         }
         public static void AddSwaggerSecurityDefinition(this SwaggerGenOptions swaggerGenOptions, SwaggerExtensionsOptions swaggerOptions)
         {
@@ -118,6 +118,23 @@ namespace Microsoft.Extensions.DependencyInjection
             AddIfExistOpenApiSecurityRequirement(openApiSecurityRequirement, swaggerOptions);
 
             swaggerGenOptions.AddSecurityRequirement(openApiSecurityRequirement);
+        }
+
+
+        private static OpenApiOAuthFlow GetOpenAPIUpdatedFlow(OpenApiOAuthFlow openApiOAuthFlow)
+        {
+
+            Dictionary<string, string> scopes = new Dictionary<string, string>();
+
+            foreach (var authorizationCodeScope in openApiOAuthFlow.Scopes)
+            {
+                var key = authorizationCodeScope.Key.Replace("__", ":");
+                var value = authorizationCodeScope.Value;
+                scopes.Add(key, value);
+            }
+            openApiOAuthFlow.Scopes = scopes;
+
+            return openApiOAuthFlow;
         }
 
         private static void AddIfExistOpenApiSecurityRequirement(OpenApiSecurityRequirement openApiSecurityRequirement, SwaggerExtensionsOptions swaggerOptions)
@@ -159,18 +176,12 @@ namespace Microsoft.Extensions.DependencyInjection
                 Type = ReferenceType.SecurityScheme,
                 Id = name
             };
-            openApiSecurityRequirement.Add(openApiSecurityScheme, scopes.Values.ToList<string>());
+            List<string> scopesList = scopes.Keys.ToList<string>();
+            openApiSecurityRequirement.Add(openApiSecurityScheme, scopesList);
         }
 
         private static void AddIfExistOpenApiOAuthFlow(OpenApiOAuthFlows flows, SwaggerGenOptions swaggerGenOptions, OpenApiSecurityScheme securityScheme, SwaggerExtensionsOptions swaggerOptions)
         {
-            if (swaggerOptions.OpenApiSecurityScheme == null
-                || swaggerOptions.OpenApiSecurityScheme.Flows == null
-                )
-            {
-                throw new ArgumentNullException("Invalid Flows Configuration.");
-            };
-
             if (swaggerOptions.OpenApiSecurityScheme.Flows.Implicit != null)
             {
                 flows.AddImplicitFlow(swaggerOptions);
