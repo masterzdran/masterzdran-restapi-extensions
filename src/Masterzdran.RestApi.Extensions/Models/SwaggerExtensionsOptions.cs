@@ -10,6 +10,7 @@ namespace Masterzdran.RestApi.Extensions.Models
         public string ApiName { get; set; }
         public string Name { get; set; }
         public string OpenIdClientId { get; set; }
+        public string XmlFile { get; set; }
 
     }
 }
