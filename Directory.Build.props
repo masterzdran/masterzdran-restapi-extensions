@@ -8,10 +8,10 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/masterzdran/masterzdran-restapi-extensions</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/masterzdran/masterzdran-restapi-extensions</PackageProjectUrl>
-		<!--<PackageId>MasterZdran.RestApi.Extensions</PackageId>-->		
+		
 		<RepositoryType>git</RepositoryType>
 		<RepositoryBranch>main</RepositoryBranch>
-    <!-- <Title>MasterZdran.RestApi.Extensions</Title> -->
+    
     <Description>A library with methods and models to simplify API settings.</Description>
     <PackageTags>Rest, API</PackageTags>
 	</PropertyGroup>
