@@ -1,0 +1,57 @@
+name: Build And Deploy Library
+
+on:
+  push:    
+    branches: 
+      - 'release/all/**'
+env:
+  CONFIGURATION: 'Release'
+jobs:
+  build_and_test:
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout.
+        uses: actions/checkout@v3
+      - name: Setup .NET.
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.x
+      - name: Restore packages.
+        run: dotnet restore MasterzdranRestApiExtensionsSolution.sln
+      - name: Build Solution
+        run: dotnet build MasterzdranRestApiExtensionsSolution.sln --no-restore
+
+  packing:
+    needs: build_and_test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout.
+        uses: actions/checkout@v3
+              
+      - name: Setup .NET.
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.x
+      - name: Pack MasterzdranRestApiExtensionsSolution.sln
+        run: dotnet pack --configuration Release --output ./dist/
+
+      - name: Upload nuget packages
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          path: './dist'
+
+  publish_nuget_org:
+    needs: packing
+    runs-on: ubuntu-latest
+    environment:
+      name: NUGET_ORG
+      url: 'https://www.nuget.org/profiles/masterzdran'
+    steps:
+      - name: Download nuget packages
+        uses: actions/download-artifact@v3.0.0
+        with:
+          path: './dist'
+      - name: Publish nuget.org
+        run: dotnet nuget push dist/MasterZdran.RestApi.Extensions.*.nupkg --api-key ${{secrets.NUGET_ORG_TOKEN}} --source https://api.nuget.org/v3/index.json
