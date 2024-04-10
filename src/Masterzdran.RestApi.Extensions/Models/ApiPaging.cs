@@ -12,6 +12,13 @@ namespace Masterzdran.RestApi.Extensions.Models
         private readonly short _defaultPageSize = 20;
         private readonly short _defaultPage = 0;
         private readonly short _maxPageSize = 50;
+
+        public ApiPaging()
+        {
+            _pagenumber = _defaultPage;
+            _pagesize = _defaultPageSize;
+        }
+
         /// <summary>
         /// Number of the page you want to return. It is a Zero based index. Default is page 0.
         /// </summary>

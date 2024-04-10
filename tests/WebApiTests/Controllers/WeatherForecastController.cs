@@ -29,15 +29,22 @@ namespace WebApiTests.Controllers
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get([FromQuery] ApiPaging paging)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces(HttpMediaTypes.ApplicationJson)]
+        public ResponseType<WeatherForecast> Get([FromQuery] ApiPaging paging)
         {
-            return Enumerable.Range(paging.FirstRecord, paging.PageSize).Select(index => new WeatherForecast
+            var response = new ResponseType<WeatherForecast>();
+
+            response.TotalNumberOfRecords = s_summaries.Length;
+            response.Results = Enumerable.Range(paging.FirstRecord, paging.PageSize).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
                 TemperatureC = Random.Shared.Next(-20, 55),
                 Summary = s_summaries[index]
             })
             .ToArray();
+
+            return response;
         }
     }
 }
