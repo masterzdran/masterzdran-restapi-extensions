@@ -54,4 +54,4 @@ jobs:
         with:
           path: './dist'
       - name: Publish nuget.org
-        run: dotnet nuget push dist/MasterZdran.RestApi.Extensions.*.nupkg --api-key ${{secrets.NUGET_ORG_TOKEN}} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push dist/artifact/MasterZdran.RestApi.Extensions.*.nupkg --api-key ${{secrets.NUGET_ORG_TOKEN}} --source https://api.nuget.org/v3/index.json
