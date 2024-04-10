@@ -1,4 +1,13 @@
 # MasterZdran Rest API Extensions
+Presenting **MasterZdran Rest API Extensions**, a humble yet invaluable NuGet library crafted with the intention to simplify the journey of web API and REST API development. 
+
+Within its modest confines lie a collection of extension methods and models meticulously tailored to ease the burdensome tasks often encountered in API creation. 
+
+**MasterZdran Rest API Extensions** humbly offers developers a reliable toolkit to navigate through common challenges, offering assistance in configuring Swashbuckle Swagger, api paging and more. 
+
+With **MasterZdran Rest API Extensions** by your side, you can bid farewell to tedious, repetitive coding and embrace a more efficient, enjoyable development experience.
+
+
 
 # API PAGING
 
@@ -18,7 +27,41 @@ public IEnumerable<WeatherForecast> Get([FromQuery] ApiPaging paging)
 1. The DEFAULT PAGE SIZE is 20, and the MAX PAGE SIZE is 50. If the value is negative or greater than MAX PAGE SIZE, by default return DEFAULT PAGE SIZE.
 1. The PAGE NUMBER is zero based index. If the value is negative, by default return page 0.
 1. 'ORDERED FIELD', is the field the client want to results ordered, 'ORDERED BY' should be set also.
-1. None of the fields is mandatory.
+1. None of the fields are mandatory.
+
+
+# HTTP Media Types Constants (HttpMediaTypes)
+```csharp
+        [HttpGet(Name = "GetWeatherForecast")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces(HttpMediaTypes.ApplicationJson)] // <<---- 
+        public IEnumerable<WeatherForecast> Get([FromQuery] ApiPaging paging)
+        {
+            // ...
+        }
+```
+
+# Generic API (GET) Response (ResponseType<T>)
+```csharp
+        [HttpGet(Name = "GetWeatherForecast")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces(HttpMediaTypes.ApplicationJson)]
+        public ResponseType<WeatherForecast> Get([FromQuery] ApiPaging paging) // <<---- 
+        {
+            var response = new ResponseType<WeatherForecast>(); // <<---- 
+
+            response.TotalNumberOfRecords = s_summaries.Length;
+            response.Results = Enumerable.Range(paging.FirstRecord, paging.PageSize).Select(index => new WeatherForecast
+            {
+                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+                TemperatureC = Random.Shared.Next(-20, 55),
+                Summary = s_summaries[index]
+            })
+            .ToArray();
+
+            return response;
+        }
+```
 
 
 # Swashbuckle Extensions
@@ -44,7 +87,7 @@ scopes key value pair:
 key = scope
 value = descriptions
 
-if the scope key has ':' should be replace by '\_\_'. This will be translated by the extension to ':'.
+if the scope key has ':' character should be replace by '\_\_'. This will be translated by the extension to ':'.
 ```
 
 ### Complete appSettings Section

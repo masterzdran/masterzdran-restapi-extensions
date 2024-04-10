@@ -7,18 +7,24 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/masterzdran/masterzdran-restapi-extensions</RepositoryUrl>
-		<PackageProjectUrl>https://github.com/masterzdran/masterzdran-restapi-extensions</PackageProjectUrl>
-		
+		<PackageProjectUrl>https://github.com/masterzdran/masterzdran-restapi-extensions</PackageProjectUrl>		
 		<RepositoryType>git</RepositoryType>
 		<RepositoryBranch>main</RepositoryBranch>
-    
     <Description>A library with methods and models to simplify API settings.</Description>
     <PackageTags>Rest, API</PackageTags>
 	</PropertyGroup>
+
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <!-- Include symbol files (*.pdb) in the built .nupkg -->
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+  
 	<ItemGroup>
-		<None Include="../../../icon.64.png" Pack="true" PackagePath="\" />
+		<None Include="../../icon.64.png" Pack="true" PackagePath="\" />
 	</ItemGroup>
 	  <ItemGroup>
-    <None Include="../../../README.md" Pack="true" PackagePath="\"/>
+    <None Include="../../README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 </Project>
